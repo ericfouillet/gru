@@ -171,7 +171,7 @@ func ReportSummary(cid string) (Summary, ReportError) {
 		return s, ReportError{err.Error(), "", http.StatusInternalServerError}
 	}
 
-	if rep.Candidates[0].Id == "" {
+	if len(rep.Candidates) != 1 || rep.Candidates[0].Id == "" || len(rep.Candidates[0].Quiz) != 1 {
 		return s, ReportError{"", "Candidate not found.", http.StatusBadRequest}
 	}
 	s.Id = rep.Candidates[0].Id

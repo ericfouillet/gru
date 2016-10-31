@@ -93,6 +93,7 @@ func QuestionHandler(w http.ResponseWriter, r *http.Request) {
 	m.Set(`<_new_:qn> <question.uid> <_uid_:` + qn.Id + `> .`)
 	m.Set(`<_uid_:` + qn.Id + `> <question.candidate> <_uid_:` + userId + `> .`)
 	m.Set(`<_new_:qn> <question.asked> "` + time.Now().Format("2006-01-02T15:04:05Z07:00") + `" .`)
+	m.Set(`<_uid_:` + userId + `> <candidate.lastqnuid> "` + qn.Id + `" .`)
 	res, err := dgraph.SendMutation(m.String())
 	if err != nil {
 		sr.Write(w, "", err.Error(), http.StatusInternalServerError)
@@ -103,8 +104,17 @@ func QuestionHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	c.lastQnUid = qn.Id
 	c.lastQnCuid = res.Uids["qn"]
 	qn.Cid = res.Uids["qn"]
+	m = new(dgraph.Mutation)
+	m.Set(`<_uid_:` + userId + `> <candidate.lastqncuid> "` + res.Uids["qn"] + `" .`)
+	res, err = dgraph.SendMutation(m.String())
+	if err != nil {
+		sr.Write(w, "", err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	c.lastQnUid = qn.Id
+	updateMap(userId, c)
 	server.MarshalAndWrite(w, &qn)
 }

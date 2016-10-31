@@ -153,8 +153,8 @@ type cand struct {
 	Quiz       []quiz    `json:"candidate.quiz"`
 	Questions  []qids    `json:"candidate.question"`
 	QuizStart  time.Time `json:"quiz_start"`
-	LastQnUid  string
-	LastQnCuid string
+	LastQnUid  string    `json:"candidate.lastqnuid"`
+	LastQnCuid string    `json:"candidate.lastqncuid"`
 }
 
 type resp struct {
@@ -235,9 +235,10 @@ func candQuery(cid string) string {
                                 _uid_
                         }
                         question.answered
+                        candidate.score
                 }
-                lastQnUid
-                lastQnCuid
+                candidate.lastqnuid
+                candidate.lastqncuid
           }
     }`
 }
@@ -307,7 +308,6 @@ func checkAndUpdate(uid string) (int, error) {
 		// He has already been asked some questions. Lets figure out the
 		// ones he has answered.
 		qa = qnsAnswered(cand.Questions)
-		fmt.Printf("answered %+v\n", qa)
 	}
 
 	// Get quiz questions for the quiz id.
@@ -315,9 +315,9 @@ func checkAndUpdate(uid string) (int, error) {
 	if err != nil {
 		return http.StatusInternalServerError, err
 	}
-	fmt.Printf("unanswered %+v\n", qnsUnanswered)
+
 	shuffleQuestions(qnsUnanswered)
-	// Lets bring the lastQnAsked to the first place.
+	// Lets bring the last question asked to the first place.
 	for idx, qn := range qnsUnanswered {
 		if qn.Id == cand.LastQnUid {
 			qnsUnanswered[0], qnsUnanswered[idx] = qnsUnanswered[idx], qnsUnanswered[0]
