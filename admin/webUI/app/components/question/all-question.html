@@ -1,32 +1,43 @@
 <div ng-controller="allQuestionController as allQVm" class="question-listing" id="question-listing">	
 	<div class="" ng-if="mainVm.allQuestions.length">
-		<div class="mdl-grid mdl-grid--no-spacing mt-20 b-border">
-			<div class="mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet pl-5">
-				<h5>
-					List of all questions
+		<div class="mdl-grid mdl-grid--no-spacing b-border">
+			<div class="mdl-cell mdl-cell--2-col mdl-cell--2-col-tablet pl-5">
+				<h5 class="mt-10">
+					Question Lists
 				</h5>
 			</div>
-			<div class="mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet">
+			<div class="mdl-cell mdl-cell--4-col mdl-cell--4-col-tablet tag-filter">
+				<!-- <ui-select multiple theme="select2" ng-model="allQVm.filter.tags" class="mdl-select">
+			    <ui-select-match  placeholder="Filter By Tags">
+			        <span ng-bind="$item.name"></span>
+			    </ui-select-match>
+			    <ui-select-choices repeat="tag in (questionVm.allTags | filter: $select.search) track by $index">
+			        <span ng-bind="tag.name"></span>
+			    </ui-select-choices>
+				</ui-select> -->
+			</div>
+			<div class="mdl-cell mdl-cell--6-col mdl-cell--2-col-tablet">
 				<button class="mdl-button btn-succes bg-green pull-right" ng-click="mainVm.goTo('question.add')">Add New</button>
 			</div>
 		</div>
-		<div class="mdl-tabs vertical-mdl-tabs mdl-js-tabs mdl-js-ripple-effect mt-30">
+		<div class="mdl-tabs vertical-mdl-tabs mdl-js-tabs mdl-js-ripple-effect mt-10">
 	    <div class="mdl-grid mdl-grid--no-spacing">
 	      <div class="mdl-cell mdl-cell--2-col r-border">
 	        <div class="mdl-tabs__tab-bar">
 	          <!-- <a href="#" class=" pv-5" ng-repeat="question in mainVm.allQuestions" ng-class="{'is-active': $index == 0}" ng-click="allQVm.setQuestion(question, $index)">
 							{{question.name}}
 	          </a> -->
-	          <div class="side-tabs pv-5" ng-repeat="question in mainVm.allQuestions" ng-class="{'is-active': allQVm.question == question}" ng-click="allQVm.question = question">
+	          <div class="side-tabs pv-5" ng-repeat="question in mainVm.allQuestions | filter: allQVm.filter" ng-class="{'is-active': allQVm.question == question}" ng-click="allQVm.question = question">
+	          	{{allQVm.setFilter(question)}}
 							<span class="text-green option-icon">
-						  		<span ng-if="question['question.correct'].length == 1">
-						  			<i class="material-icons">done</i>
-						  		</span>
-						  		<span ng-if="question['question.correct'].length > 1">
-						  			<i class="material-icons">done_all</i>
-						  		</span>
-						  	</span>
-						  	{{question.name}}
+					  		<span ng-if="question['question.correct'].length == 1">
+					  			<i class="material-icons">done</i>
+					  		</span>
+					  		<span ng-if="question['question.correct'].length > 1">
+					  			<i class="material-icons">done_all</i>
+					  		</span>
+					  	</span>
+					  	{{question.name}}
 	          </div>
 	          <div class="pt-20 text-center text-red" ng-show="allQVm.noItemFound">
 							<div>No more questions available</div>

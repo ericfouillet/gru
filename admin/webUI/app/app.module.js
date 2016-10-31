@@ -117,7 +117,7 @@ angular.module('GruiApp').constant('APP_REQUIRES', {
       'angular-select': ['assets/lib/js/angular-select.min.js'],
       'codeMirror': ['assets/lib/js/codemirror.js'],
       'javascript': ['assets/lib/js/javascript.js'],
-      'marked': ['https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.2/marked.min.js'],
+      'marked': ['assets/lib/js/marked.min.js'],
       'highlight': ['assets/lib/js/highlight.pack.js'],
     },
 });

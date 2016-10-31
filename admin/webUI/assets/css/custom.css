@@ -191,6 +191,10 @@ body.home {
   background-size: 100% 100%;
 }
 
+.tag-filter .mdl-select.select2-container {
+  padding-top: 0;
+}
+
 .typesearch {
   position: relative;
 }
@@ -238,6 +242,10 @@ body.home {
 }
 .mdl-select.select2-container .select2-choices .select2-search-choice{
   line-height: 20px;
+  background-color: initial;
+  background-image: none;
+  border-color: black;
+  color: black;
 }
 .mdl-select.select2-container .select2-search-choice-close {
   left: 3px;

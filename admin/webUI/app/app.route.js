@@ -118,7 +118,7 @@
           url: '/admin/invite',
           abstract: true,
           templateUrl: inviteTemplate,
-          resolve: helper.resolveFor('inviteController', 'quizServices', 'inviteService'),
+          resolve: helper.resolveFor('inviteController', 'quizServices', 'inviteService', 'marked', 'highlight'),
         })
           .state('invite.dashboard', {
             url: '/dashboard/:quizID',
@@ -143,6 +143,7 @@
           .state('invite.report', {
             url: '/candidate-report/:candidateID',
             parent: 'invite',
+            css: [githubCSS],
             templateUrl: candidateReportTemplate,
             authenticate: true,
           })

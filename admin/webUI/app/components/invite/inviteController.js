@@ -232,6 +232,7 @@
 
 		// Function
 		cReportVm.initScoreCircle = initScoreCircle;
+		cReportVm.isCorrect = isCorrect;
 
 		if(!cReportVm.candidateID) {
 			cReportVm.inValidID = true;
@@ -248,10 +249,33 @@
 			}
 			cReportVm.info = data;
 			cReportVm.timeTaken = mainVm.parseGoTime(cReportVm.info.time_taken);
+			cReportVm.info.feedback = unescape(cReportVm.info.feedback).replace(/\n/, "<br>");
 
 			cReportVm.initScoreCircle();
 		}, function(error){
 			console.log(error);
+		}).then(function(){
+			var questions = cReportVm.info.questions;
+			quesLen = questions.length
+			for(var i = 0; i < quesLen; i++) {
+				var question = questions[i];
+				if(question.answers[0] == "") {
+					question.isSkip = true;
+					continue
+				}
+				question.answerArray = [];
+				for(var j = 0; j < question.answers.length; j++) {
+					var answerObj = {
+						_uid_ : question.answers[j]
+					}
+					answerObj.is_correct = (question.correct.indexOf(question.answers[j]) > -1)
+					question.answerArray.push(answerObj);
+				}
+				if((question.answers.length < question.correct.length)) {
+					question.notAnswered = question.correct.length - question.answers.length;
+				}
+			} 
+			console.log(question.answerArray);
 		})
 
 		function initScoreCircle() {
@@ -273,6 +297,22 @@
 			setTimeout(function() {
 				$progressBar.css({'stroke-dashoffset': circleProgressWidth});
 			}, 100);
+		}
+
+		function isCorrect(option, correct_options) {
+			var uid = option._uid_;
+			if(!correct_options) {
+				return false
+			}
+			var optLength = correct_options.length;
+
+			for(var i = 0; i < optLength; i++) {
+				if(correct_options[i] == uid) {
+					// option.is_correct = true
+					return true
+				}
+			}
+			return false
 		}
 	}
 

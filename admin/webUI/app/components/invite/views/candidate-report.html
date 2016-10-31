@@ -8,7 +8,6 @@
 				{{cReportVm.info.name}}
 			</div>
 		</div>
-		
 		<div class="mdl-grid mdl-chip-info no-pad mt-30">
 			<div class="mdl-cell mdl-cell--7-col no-margin-lr">
 				<div class="mb-10">
@@ -75,28 +74,26 @@
 			<div class="mdl-cell mdl-cell--3-col">
 				<i class="material-icons">feedback</i> FEEDBACK
 			</div>
-			<div class="mdl-cell mdl-cell--9-col no-margin-lr">
-				{{cReportVm.info.feedback}}
-			</div>
+			<div class="mdl-cell mdl-cell--9-col no-margin-lr" ng-bind-html="cReportVm.info.feedback"></div>
 		</div>
 
 		<div class="mdl-grid no-pad">
 			<div class="mdl-cell mdl-cell--12-col no-margin-lr">
 				<h5> Question Details </h5>
-				<table class="mdl-data-table mdl-shadow--2dp">
-				  <thead>
-				    <tr>
-				      <th class="mdl-data-table__cell--non-numeric">S.NO.</th>
-				      <th class="mdl-data-table__cell--non-numeric">QUESTION NAME</th>
-				      <th class="mdl-data-table__cell--non-numeric">TIME TAKEN</th>
-				      <th>SCORE</th>
-				    </tr>
-				  </thead>
-				  <tbody>
-				    <tr ng-repeat="question in cReportVm.info.questions | filter:searchQ">
-				      <td class="mdl-data-table__cell--non-numeric">{{$index + 1}}</td>
-				      <td class="mdl-data-table__cell--non-numeric">{{question.name}}</td>
-				      <td class="mdl-data-table__cell--non-numeric">
+				<div class="mdl-grid no-pad b-border">
+					<div class="mdl-cell mdl-cell--1-col pb-10">S.NO.</div>
+					<div class="mdl-cell mdl-cell--4-col">QUESTION NAME</div>
+					<div class="mdl-cell mdl-cell--3-col">TIME TAKEN</div>
+					<div class="mdl-cell mdl-cell--2-col">SCORE</div>
+					<div class="mdl-cell mdl-cell--2-col">ANSWER</div>
+				</div>
+				<div class="slide-wrapper b-border" ng-repeat="question in cReportVm.info.questions | filter:searchQ">
+					<div class="mdl-grid no-pad slide-link">
+						<div class="mdl-cell mdl-cell--1-col">
+							{{$index + 1}}
+						</div>
+						<div class="mdl-cell mdl-cell--4-col">{{question.name}}</div>
+						<div class="mdl-cell mdl-cell--3-col">
 				      	<span ng-if="question.parsedTime.hours">
 									{{question.parsedTime.hours}} Hour<span ng-if="question.parsedTime.hours > 1">s</span>
 								</span>
@@ -109,13 +106,55 @@
 								<span ng-if="!question.parsedTime">
 									--
 								</span>
-				      </td>
-				      <td>
-								{{question.score}}
-				      </td>
-				    </tr>
-				  </tbody>
-				</table>
+				      </div>
+						<div class="mdl-cell mdl-cell--2-col">
+							{{question.score}}
+				    </div>
+						<div class="mdl-cell mdl-cell--2-col">
+							<div ng-if="question.isSkip">
+								Skipped
+							</div>
+							<div ng-if="!question.isSkip">
+								<span ng-repeat="answer in question.answerArray">
+									<span class="" ng-if="answer.is_correct">
+										<!-- <i class="material-icons mdi-sm text-green">check_circle</i> -->
+										<i class="material-icons mdi-sm text-green">done</i>
+									</span>
+									<span class="" ng-if="!answer.is_correct">
+										<i class="material-icons mdi-sm text-red">clear</i>
+									</span>
+								</span>
+							</div>
+						</div>
+					</div>
+					<div class="slide-content pv-10 ph-10 full-border-grey">
+						<pre class="pt-10 ph-10 code-block" ng-bind-html="mainVm.markDownFormat(mainVm.unescapeText(question.text))"></pre>
+						<div class="mdl-grid no-pad mt-10">
+							<div class="mdl-cell mdl-cell--4-col mdl-cell--middle">
+								<div class="ph-10 bold">OPTIONS</div>
+							</div>
+							<div class="mdl-cell mdl-cell--2-col mdl-cell--middle">
+								<div class="ph-10 bold">CORRECT</div>
+							</div>
+							<div class="mdl-cell mdl-cell--4-col mdl-cell--middle">
+								<div class="ph-10 bold">CANDIDATE ANSWERED</div>
+							</div>
+						</div>
+						<div class="mdl-grid no-pad mt-10" ng-repeat="option in question.options track by $index">
+							<div class="mdl-cell mdl-cell--4-col mdl-cell--middle full-border-grey">
+								<div class="ph-10 pt-10 position-relative">
+									<pre ng-bind-html="mainVm.markDownFormat(mainVm.unescapeText(option.name))" class="code-block"></pre>
+								</div>
+							</div>
+							<div class="mdl-cell mdl-cell--2-col pl-10">
+								<i class="material-icons mdi-sm text-green" ng-show="cReportVm.isCorrect(option, question.correct)">check_circle</i>
+							</div>
+							<div class="mdl-cell mdl-cell--4-col pl-10">
+								<i class="material-icons mdi-sm" ng-show="cReportVm.isCorrect(option, question.answers)">check_circle</i>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>

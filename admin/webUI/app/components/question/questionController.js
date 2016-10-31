@@ -31,6 +31,10 @@
 		  lineWrapping: true,
 		  indentWithTabs: true,
 		};
+
+		$rootScope.$on("isCorrect", function(e, option, correct_options) {
+			console.log(option, correct_options)
+		})
 		
 	// FUNCTION DECLARATION
 		questionVm.addNewTag = addNewTag;
@@ -276,6 +280,7 @@
 		// FUNCTION DECLARATION
 		allQVm.getAllQuestions = getAllQuestions;
 		allQVm.setQuestion = setQuestion;
+		allQVm.setFilter = setFilter;
 
 		// INITITIALIZERS
 		console.log($stateParams);
@@ -362,6 +367,11 @@
 		function setQuestion(question, index) {
 			allQVm.question = question;
 			allQVm.questionIndex = index;
+		}
+
+		function setFilter(question) {
+			question.filter = {};
+			question.filter.tags = question['question.tag'];
 		}
 
 	} // AllQuestionController
