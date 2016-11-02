@@ -257,6 +257,8 @@
 		}).then(function(){
 			var questions = cReportVm.info.questions;
 			quesLen = questions.length
+
+			// 
 			for(var i = 0; i < quesLen; i++) {
 				var question = questions[i];
 				if(question.answers[0] == "") {
@@ -264,18 +266,30 @@
 					continue
 				}
 				question.answerArray = [];
+
+				var needToShift = false;
 				for(var j = 0; j < question.answers.length; j++) {
 					var answerObj = {
 						_uid_ : question.answers[j]
 					}
 					answerObj.is_correct = (question.correct.indexOf(question.answers[j]) > -1)
 					question.answerArray.push(answerObj);
+
+					if(!answerObj.is_correct) {
+						needToShift = true;
+					}
 				}
 				if((question.answers.length < question.correct.length)) {
 					question.notAnswered = question.correct.length - question.answers.length;
 				}
+
+				// Shift Wrong answer to the top of array
+				if(needToShift || (question.notAnswered && question.notAnswered > 0)) {
+					var shiftQuestion = [];
+					shiftQuestion = cReportVm.info.questions.splice(i, 1);
+					cReportVm.info.questions.unshift(shiftQuestion[0]);
+				}
 			} 
-			console.log(question.answerArray);
 		})
 
 		function initScoreCircle() {

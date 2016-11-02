@@ -123,6 +123,9 @@
 									<span class="" ng-if="!answer.is_correct">
 										<i class="material-icons mdi-sm text-red">clear</i>
 									</span>
+									<span ng-repeat="notAnswered in mainVm.getNumber(question.notAnswered)" ng-if="question.notAnswered">
+										<i class="material-icons mdi-sm text-red">clear</i>
+									</span>
 								</span>
 							</div>
 						</div>
