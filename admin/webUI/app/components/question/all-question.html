@@ -124,12 +124,12 @@
 	    	</div>
 	    </div>
 		</div>
-	</div>
-	<div class="lazy-loader text-center" ng-show="allQVm.showLazyLoader">
-		<div class="mdl-spinner mdl-js-spinner is-active"></div>
-	</div>
+		<div class="lazy-loader text-center" ng-show="allQVm.showLazyLoader">
+			<div class="mdl-spinner mdl-js-spinner is-active"></div>
+		</div>
+	</div>	
 
-	<div class="text-center" ng-if="!mainVm.allQuestions.length">
+	<div class="text-center ng-cloak" ng-if="mainVm.allQuestions.length == 0">
 		<h4 class="text-center">
 			Could not find any question.
 		</h4>

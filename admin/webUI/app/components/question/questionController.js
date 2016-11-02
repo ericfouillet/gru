@@ -275,7 +275,6 @@
 		allQVm.showLazyLoader = false;
 		allQVm.lazyStatus = true;
 		allQVm.noItemFound = false;
-		mainVm.allQuestions = [];
 
 		// FUNCTION DECLARATION
 		allQVm.getAllQuestions = getAllQuestions;
