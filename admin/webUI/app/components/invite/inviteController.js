@@ -1,30 +1,5 @@
 (function(){
 
-	function alreadyInvited (quizId, email, proxy) {
-		var deferred = $q.defer();
-		// TODO - User filter on email after incorporating Dgraph schema.
-		var query = "{\
-                quiz(_uid_: "+ quizId + ") {\
-                        quiz.candidate {\
-                                email\
-                        }\
-                }\
-        }"
-
-		var found = false
-		proxy(query).then(function(data){
-			var candidates = data.quiz[0]["quiz.candidate"]
-			for (var i = 0; i < candidates.length; i++) {
-				if (candidates[i].email === email) {
-					found = true
-					break
-				}
-			}
-			return deferred.resolve(found);
-		});
-		return deferred.promise;
-	}
-
 	function inviteController($scope, $rootScope, $stateParams, $state, quizService, inviteService) {
 		inviteVm = this;
 
@@ -73,18 +48,16 @@
 			inviteVm.newInvite.quiz_id = inviteVm.newInvite.quiz._uid_;
 			inviteVm.newInvite.validity = dateTime;
 
-			alreadyInvited(inviteVm.newInvite.quiz_id, inviteVm.newInvite.email, inviteService.proxy).then(
-				function(data){
-					console.log(data)
+			invited = inviteService.alreadyInvited(inviteVm.newInvite.quiz_id, inviteVm.newInvite.email)
+			console.log(invited)
 
+			if (invited) {
+				SNACKBAR({
+					message: "Candidate has already been invited.",
+					messageType: "error",
 				})
-			// if (invited) {
-			// 	SNACKBAR({
-			// 		message: "Candidate has already been invited.",
-			// 		messageType: "error",
-			// 	})
-			// 	return
-			// }
+				return
+			}
 
 			inviteService.inviteCandidate(inviteVm.newInvite).then(function(data){
 				SNACKBAR({
