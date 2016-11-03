@@ -1,6 +1,6 @@
 (function(){
 
-	function quizLandingController($scope, $state, $stateParams, $q, $http, $interpolate) {
+	function quizLandingController($scope, $state, $stateParams, $http, $interpolate, quizLandingService) {
 
 	// VARIABLE DECLARATION
 		qlVm = this;
@@ -101,12 +101,10 @@
 
 			var ctoken = JSON.parse(localStorage.getItem("candidate_info"));
 			console.log(ctoken)
-			ctoken.name = qlVm.candidate.name
+			ctoken.Name = qlVm.candidate.name
 			localStorage.setItem('candidate_info', JSON.stringify(ctoken));
 
-
-			quizLandingService.addName(requestData)
-			.then(function(data){
+			quizLandingService.addName(requestData).then(function(data){
 				console.log(data);
 				mainVm.goTo('candidate.quiz')
 			}, function(err){
