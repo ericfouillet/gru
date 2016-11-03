@@ -1,5 +1,30 @@
 (function(){
 
+	function alreadyInvited (quizId, email, proxy) {
+		var deferred = $q.defer();
+		// TODO - User filter on email after incorporating Dgraph schema.
+		var query = "{\
+                quiz(_uid_: "+ quizId + ") {\
+                        quiz.candidate {\
+                                email\
+                        }\
+                }\
+        }"
+
+		var found = false
+		proxy(query).then(function(data){
+			var candidates = data.quiz[0]["quiz.candidate"]
+			for (var i = 0; i < candidates.length; i++) {
+				if (candidates[i].email === email) {
+					found = true
+					break
+				}
+			}
+			return deferred.resolve(found);
+		});
+		return deferred.promise;
+	}
+
 	function inviteController($scope, $rootScope, $stateParams, $state, quizService, inviteService) {
 		inviteVm = this;
 
@@ -48,6 +73,19 @@
 			inviteVm.newInvite.quiz_id = inviteVm.newInvite.quiz._uid_;
 			inviteVm.newInvite.validity = dateTime;
 
+			alreadyInvited(inviteVm.newInvite.quiz_id, inviteVm.newInvite.email, inviteService.proxy).then(
+				function(data){
+					console.log(data)
+
+				})
+			// if (invited) {
+			// 	SNACKBAR({
+			// 		message: "Candidate has already been invited.",
+			// 		messageType: "error",
+			// 	})
+			// 	return
+			// }
+
 			inviteService.inviteCandidate(inviteVm.newInvite).then(function(data){
 				SNACKBAR({
 					message: data.Message,
@@ -65,9 +103,6 @@
 		}
 
 		function invalidateInput(inputs) {
-			if(!inputs.name) {
-				return "Please Enter Valid Name";
-			}
 			if(!isValidEmail(inputs.email)) {
 				return "Please Enter Valid Email"; 
 			}
@@ -151,6 +186,15 @@
 
 			var requestData = angular.copy(editInviteVm.candidate);
 
+
+			if (alreadyInvited(editInviteVm.candidate.quiz_id, editInviteVm.candidate.email, inviteService.proxy)) {
+				SNACKBAR({
+					message: "Candidate has already been invited.",
+					messageType: "error",
+				})
+				return
+			}
+
 			inviteService.editInvite(requestData)
 			.then(function(data){
 				SNACKBAR({
@@ -221,6 +265,7 @@
 				// TODO - Maybe store invite in a format that frontend directly
 				// understands.
 				if (cand.complete == "false") {
+					cand.invite_sent = new Date(Date.parse(cand.invite_sent)) || '';
 					continue;
 				}
 				cand.quiz_start = new Date(Date.parse(cand.quiz_start)) || '';

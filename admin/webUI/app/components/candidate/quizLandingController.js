@@ -4,6 +4,7 @@
 
 	// VARIABLE DECLARATION
 		qlVm = this;
+		qlVm.candidate = {name: ""};
 		qlVm.invalidUser = false;
 		mainVm.pageName = "quiz-landing";
 
@@ -89,7 +90,21 @@
 			var checkedInput = $(".quiz-landing .mdl-checkbox__input:checked").length;
 			var totalInput = qlVm.info.General.length + qlVm.info.Score.length + qlVm.info.Contact.length;
 
-			return (checkedInput == totalInput) ? false : true;
+			return (checkedInput == totalInput) && qlVm.candidate.name != "" ? false : true;
+		}
+
+		function saveName() {
+			var requestData = {
+				name: glVm.candidate.name,
+			};
+
+			quizLandingService.addName(requestData)
+			.then(function(data){
+				console.log(data);
+				mainVm.goTo('candidate.quiz')
+			}, function(err){
+				console.log(err);
+			});
 		}
 	}
 
