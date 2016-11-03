@@ -63,7 +63,7 @@ func SendReport(name string, score, maxScore float64, body string) {
 	from := mail.NewEmail("Gru", "join@dgraph.io")
 	subject := fmt.Sprintf("Gru: Candidate %v scored %.2f/%.2f in the demo test", name,
 		score, maxScore)
-	to := mail.NewEmail("Dgraph", "join@dgraph.io")
+	to := mail.NewEmail("Dgraph", "pawan@dgraph.io")
 
 	content := mail.NewContent("text/html", body)
 	m := mail.NewV3MailInit(from, subject, to, content)

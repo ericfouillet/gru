@@ -35,16 +35,14 @@
                   }\
           }"
 
-      var found = false
       services.proxy(query).then(function(data){
         var candidates = data.quiz[0]["quiz.candidate"]
         for (var i = 0; i < candidates.length; i++) {
           if (candidates[i].email === email) {
-            found = true
-            break
+            return deferred.resolve(true);
           }
         }
-        return deferred.resolve(found);
+        return deferred.resolve(false);
       });
       return deferred.promise;
     }

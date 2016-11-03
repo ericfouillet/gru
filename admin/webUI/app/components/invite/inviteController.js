@@ -48,31 +48,30 @@
 			inviteVm.newInvite.quiz_id = inviteVm.newInvite.quiz._uid_;
 			inviteVm.newInvite.validity = dateTime;
 
-			invited = inviteService.alreadyInvited(inviteVm.newInvite.quiz_id, inviteVm.newInvite.email)
-			console.log(invited)
-
-			if (invited) {
-				SNACKBAR({
-					message: "Candidate has already been invited.",
-					messageType: "error",
+			inviteService.alreadyInvited(inviteVm.newInvite.quiz_id, inviteVm.newInvite.email).then(function(invited){
+					if (invited) {
+						SNACKBAR({
+							message: "Candidate has already been invited.",
+							messageType: "error",
+						})
+						return
+					} else {
+						inviteService.inviteCandidate(inviteVm.newInvite).then(function(data){
+							SNACKBAR({
+								message: data.Message,
+								messageType: "success",
+							});
+							if(data.Success) {
+								$state.transitionTo("invite.dashboard", {
+									quizID: inviteVm.newInvite.quiz_id,
+								})
+								inviteVm.newInvite = {}
+							}
+						}, function(err){
+							console.log(err)
+						});
+					}
 				})
-				return
-			}
-
-			inviteService.inviteCandidate(inviteVm.newInvite).then(function(data){
-				SNACKBAR({
-					message: data.Message,
-					messageType: "success",
-				});
-				if(data.Success) {
-					$state.transitionTo("invite.dashboard", {
-						quizID: inviteVm.newInvite.quiz_id,
-					})
-					inviteVm.newInvite = {}
-				}
-			}, function(err){
-				console.log(err)
-			});
 		}
 
 		function invalidateInput(inputs) {

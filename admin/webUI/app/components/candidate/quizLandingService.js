@@ -26,8 +26,8 @@
               return deferred.promise;
         }
 
-        return services
-  }
+        return services;
+      }
 
   var quizLandingServicesArray = [
       "$q",

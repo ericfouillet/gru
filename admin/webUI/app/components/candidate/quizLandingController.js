@@ -6,6 +6,7 @@
 		qlVm = this;
 		qlVm.candidate = {name: ""};
 		qlVm.invalidUser = false;
+		qlVm.saveName = saveName;
 		mainVm.pageName = "quiz-landing";
 
 		if(!$stateParams.quiz_token) {
@@ -95,8 +96,14 @@
 
 		function saveName() {
 			var requestData = {
-				name: glVm.candidate.name,
+				name: qlVm.candidate.name,
 			};
+
+			var ctoken = JSON.parse(localStorage.getItem("candidate_info"));
+			console.log(ctoken)
+			ctoken.name = qlVm.candidate.name
+			localStorage.setItem('candidate_info', JSON.stringify(ctoken));
+
 
 			quizLandingService.addName(requestData)
 			.then(function(data){
@@ -111,12 +118,12 @@
 	// CANDIDATE QUIZ
 	var quizLandingDependency = [
 		"$scope",
-	    "$state",
-	    "$stateParams",
-	    "$q",
-	    "$http",
-	    "$interpolate",
-	    quizLandingController
+		"$state",
+		"$stateParams",
+		"$http",
+		"$interpolate",
+		"quizLandingService",
+		quizLandingController
 	];
 	angular.module('GruiApp').controller('quizLandingController', quizLandingDependency);
 })();
