@@ -1,7 +1,6 @@
 package quiz
 
 import (
-	"fmt"
 	"net/http"
 	"time"
 
@@ -101,7 +100,7 @@ func Validate(w http.ResponseWriter, r *http.Request) {
 		sr.Write(w, err.Error(), "", http.StatusInternalServerError)
 		return
 	}
-	fmt.Println(t)
+
 	vr := validateRes{
 		Token:    t,
 		Duration: timeLeft(c.quizStart, c.quizDuration).String(),

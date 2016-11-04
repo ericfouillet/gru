@@ -41,4 +41,5 @@ func CandidateName(w http.ResponseWriter, r *http.Request) {
 		sr.Write(w, "", err.Error(), http.StatusInternalServerError)
 		return
 	}
+	w.WriteHeader(http.StatusOK)
 }
