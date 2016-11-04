@@ -88,7 +88,7 @@
 					<div class="mdl-cell mdl-cell--2-col">ANSWER</div>
 				</div>
 				<div class="slide-wrapper b-border" ng-repeat="question in cReportVm.info.questions | filter:searchQ">
-					<div class="mdl-grid no-pad slide-link">
+					<div class="mdl-grid no-pad question-heading">
 						<div class="mdl-cell mdl-cell--1-col">
 							{{$index + 1}}
 						</div>
@@ -130,29 +130,32 @@
 							</div>
 						</div>
 					</div>
-					<div class="slide-content pv-10 ph-10 full-border-grey">
+					<div class="pv-10 ph-10 full-border-grey">
 						<pre class="pt-10 ph-10 code-block" ng-bind-html="mainVm.markDownFormat(mainVm.unescapeText(question.text))"></pre>
 						<div class="mdl-grid no-pad mt-10">
 							<div class="mdl-cell mdl-cell--4-col mdl-cell--middle">
-								<div class="ph-10 bold">OPTIONS</div>
+								<div class="ph-10 bold">OPTIONS </div>
 							</div>
-							<div class="mdl-cell mdl-cell--2-col mdl-cell--middle">
+							<div class="mdl-cell mdl-cell--6-col mdl-cell--middle text-right">
+								(Black checked mark is Candidate's answer)
+							</div>
+							<!-- <div class="mdl-cell mdl-cell--1-col mdl-cell--middle">
 								<div class="ph-10 bold">CORRECT</div>
 							</div>
-							<div class="mdl-cell mdl-cell--4-col mdl-cell--middle">
-								<div class="ph-10 bold">CANDIDATE ANSWERED</div>
-							</div>
+							<div class="mdl-cell mdl-cell--1-col mdl-cell--middle">
+								<div class="ph-10 bold">ANSWERED</div>
+							</div> -->
 						</div>
 						<div class="mdl-grid no-pad mt-10" ng-repeat="option in question.options track by $index">
-							<div class="mdl-cell mdl-cell--4-col mdl-cell--middle full-border-grey">
+							<div class="mdl-cell mdl-cell--10-col mdl-cell--middle full-border-grey">
 								<div class="ph-10 pt-10 position-relative">
 									<pre ng-bind-html="mainVm.markDownFormat(mainVm.unescapeText(option.name))" class="code-block"></pre>
 								</div>
 							</div>
-							<div class="mdl-cell mdl-cell--2-col pl-10">
+							<div class="mdl-cell mdl-cell--1-col mdl-cell--middle">
 								<i class="material-icons mdi-sm text-green" ng-show="cReportVm.isCorrect(option, question.correct)">check_circle</i>
 							</div>
-							<div class="mdl-cell mdl-cell--4-col pl-10">
+							<div class="mdl-cell mdl-cell--1-col pl-10 mdl-cell--middle">
 								<i class="material-icons mdi-sm" ng-show="cReportVm.isCorrect(option, question.answers)">check_circle</i>
 							</div>
 						</div>

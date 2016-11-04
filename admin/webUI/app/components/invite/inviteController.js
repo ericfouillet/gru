@@ -259,10 +259,15 @@
 			quesLen = questions.length
 
 			// 
+			var counter = 0;
 			for(var i = 0; i < quesLen; i++) {
 				var question = questions[i];
-				if(question.answers[0] == "") {
+				if(question.answers[0] == "skip") {
 					question.isSkip = true;
+					if(counter >= 0) {
+						skippedQuestion = cReportVm.info.questions.splice(i, 1);
+						cReportVm.info.questions.splice(counter, 0, skippedQuestion[0]);
+					}
 					continue
 				}
 				question.answerArray = [];
@@ -288,8 +293,9 @@
 					var shiftQuestion = [];
 					shiftQuestion = cReportVm.info.questions.splice(i, 1);
 					cReportVm.info.questions.unshift(shiftQuestion[0]);
+					counter += 1;
 				}
-			} 
+			}
 		})
 
 		function initScoreCircle() {
