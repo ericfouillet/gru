@@ -3,12 +3,12 @@
   function quizLandingService($q, $http, MainService) {
 
         var services = {}; //Object to return
-        var candidateToken = JSON.parse(localStorage.getItem('candidate_info'));
-        $http.defaults.headers.common['Authorization'] = 'Bearer ' + candidateToken.token;
         
         services.addName = function(data){
               var deferred = $q.defer();
 
+              var candidateToken = JSON.parse(localStorage.getItem('candidate_info'));
+              $http.defaults.headers.common['Authorization'] = 'Bearer ' + candidateToken.token;
               mainVm.showAjaxLoader = true;
               $http({
                 method: 'POST',
