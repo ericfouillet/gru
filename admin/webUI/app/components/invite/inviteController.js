@@ -138,7 +138,7 @@
 
 		function editInvite() {
 			editInviteVm.candidate.id = candidateUID;
-			editInviteVm.candidate.quiz_id = "";
+			editInviteVm.candidate.quiz_id = editInviteVm.quizID;
 			editInviteVm.candidate.old_quiz_id = "";
 			editInviteVm.candidate.validity = formatDate(editInviteVm.candidate.dates);
 
@@ -158,27 +158,28 @@
 
 			var requestData = angular.copy(editInviteVm.candidate);
 
-
-			if (alreadyInvited(editInviteVm.candidate.quiz_id, editInviteVm.candidate.email, inviteService.proxy)) {
-				SNACKBAR({
-					message: "Candidate has already been invited.",
-					messageType: "error",
+			inviteService.alreadyInvited(editInviteVm.candidate.quiz_id, editInviteVm.candidate.email).then(function(invited){
+					if (invited) {
+						SNACKBAR({
+							message: "Candidate has already been invited.",
+							messageType: "error",
+						})
+						return
+					} else {
+						inviteService.editInvite(requestData)
+						.then(function(data){
+							SNACKBAR({
+								message: data.Message,
+								messageType: "success",
+							})
+							$state.transitionTo("invite.dashboard", {
+								quizID:  editInviteVm.quizID,
+							})
+						}, function(err){
+							console.log(err)
+						})
+					}
 				})
-				return
-			}
-
-			inviteService.editInvite(requestData)
-			.then(function(data){
-				SNACKBAR({
-					message: data.Message,
-					messageType: "success",
-				})
-				$state.transitionTo("invite.dashboard", {
-					quizID:  editInviteVm.quizID,
-				})
-			}, function(err){
-				console.log(err)
-			})
 		}
 
 		function initAllQuiz() {

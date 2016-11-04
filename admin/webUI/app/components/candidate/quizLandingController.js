@@ -100,7 +100,6 @@
 			};
 
 			var ctoken = JSON.parse(localStorage.getItem("candidate_info"));
-			console.log(ctoken)
 			ctoken.Name = qlVm.candidate.name
 			localStorage.setItem('candidate_info', JSON.stringify(ctoken));
 
