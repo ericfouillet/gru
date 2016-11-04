@@ -85,7 +85,7 @@
             <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect btn-lg" ng-click="cqVm.submitAnswer()">
               Submit
             </button>
-            <a href="" class="ml-20" ng-click="cqVm.submitAnswer(true)">SKIP</a>
+            <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect btn-lg ml-20" ng-click="cqVm.submitAnswer(true)" ng-disabled="!cqVm.canSkip()">SKIP</button>
           </div>
         </div>
         <div class="mdl-cell mdl-cell--3-col">

@@ -62,6 +62,7 @@
     cqVm.calcTimeTaken = calcTimeTaken;
     cqVm.stopQuiz = stopQuiz;
     cqVm.submitFeedback = submitFeedback;
+    cqVm.canSkip = canSkip;
 
     // INITIALIZERS
     if (candidateVm.isValidUser) {
@@ -81,14 +82,15 @@
 
       candidateService.getQuestion()
         .then(function(data) {
+          var seconds = Duration.parse(data.time_taken).seconds()
           $timeTakenElem = document.querySelector('#time-taken');
           if (!cqVm.question) {
             // Initialize timer if first time api call.
             cqVm.getTime();
-            startTimer(0, $timeTakenElem, true);
+            startTimer(seconds, $timeTakenElem, true);
           } else {
             $timeTakenElem.textContent = "00:00:00";
-            startTimer(1, $timeTakenElem, true);
+            startTimer(seconds, $timeTakenElem, true);
           }
 
           cqVm.question = data;
@@ -115,6 +117,10 @@
             }
           }
         })
+    }
+
+    function canSkip() {
+      return cqVm.timerObj.time_elapsed >= 10
     }
 
     function stopQuiz() {
@@ -210,9 +216,9 @@
 
       if (isReverse) {
         clearInterval(cqVm.timerObj.time_taken);
-        cqVm.timerObj.time_taken = setInterval(function() {
+        cqVm.timerObj.time_taken = setInterval(function foo() {
           manipulateTime(timer, display);
-          timer++;
+          cqVm.timerObj.time_elapsed = timer++;
         }, 1000);
       } else {
         cqVm.timerObj.time_left = setInterval(function() {
@@ -266,10 +272,6 @@
           }
         }, function(err) {
           mainVm.initNotification();
-          // if(err.status == 0) {
-          //    mainVm.timeoutModal();
-          //    cqVm.stopQuiz();
-          // }
         })
     }
 
