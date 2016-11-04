@@ -85,7 +85,7 @@
             <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect btn-lg" ng-click="cqVm.submitAnswer()">
               Submit
             </button>
-            <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect btn-lg ml-20" ng-click="cqVm.submitAnswer(true)" ng-disabled="!cqVm.canSkip()">SKIP</button>
+            <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect btn-lg ml-20" ng-click="cqVm.submitAnswer(true)" ng-disabled="!(cqVm.timerObj.time_elapsed >= 10)">SKIP</button>
           </div>
         </div>
         <div class="mdl-cell mdl-cell--3-col">
