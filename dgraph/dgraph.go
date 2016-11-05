@@ -3,10 +3,12 @@ package dgraph
 import (
 	"encoding/json"
 	"flag"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"strings"
 
+	"github.com/dgraph-io/gru/admin/server"
 	"github.com/pkg/errors"
 )
 
@@ -57,7 +59,27 @@ func SendMutation(m string) (MutationRes, error) {
 
 	var mr MutationRes
 	json.NewDecoder(res.Body).Decode(&mr)
+	if mr.Code != "ErrorOk" {
+		return MutationRes{}, fmt.Errorf(mr.Message)
+	}
 	return mr, nil
+}
+
+func QueryAndUnmarshal(q string, i interface{}) error {
+	res, err := http.Post(endpoint, "application/x-www-form-urlencoded", strings.NewReader(q))
+	if err != nil {
+		return errors.Wrap(err, "Couldn't get response from Dgraph")
+	}
+	defer res.Body.Close()
+
+	b, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		return errors.Wrap(err, "Couldn't read response body")
+	}
+	if err = json.Unmarshal(b, i); err != nil {
+		return err
+	}
+	return nil
 }
 
 func Query(q string) ([]byte, error) {
@@ -72,4 +94,21 @@ func Query(q string) ([]byte, error) {
 		return []byte{}, errors.Wrap(err, "Couldn't read response body")
 	}
 	return b, nil
+}
+
+func Proxy(w http.ResponseWriter, r *http.Request) {
+	sr := server.Response{}
+	b, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		sr.Write(w, err.Error(), "Couldn't read body", http.StatusBadRequest)
+		return
+	}
+
+	// TODO - Later send bytes directly to Dgraph.
+	res, err := Query(string(b))
+	if err != nil {
+		sr.Write(w, err.Error(), "Couldn't read body", http.StatusBadRequest)
+		return
+	}
+	w.Write(res)
 }
