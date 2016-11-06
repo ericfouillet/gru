@@ -1,9 +1,9 @@
-<div class="mdl-grid no-pad mr-100 report-page" scroll ng-controller="candidateReportController as cReportVm">
+<div class="mdl-grid no-pad report-page" scroll ng-controller="candidateReportController as cReportVm">
   <div class="mdl-cell mdl-cell--3-col mdl-cell--hide-tablet mdl-cell--hide-phone ml-0 mt-0">
     <div class="sticky-sidebar position-fixed">
       <div class="sticky-sidebar-content">
-        <div class="pv-10 pl-10 mdl-color--teal">QUESTIONS</div>
-        <div class="quiz-report b-border pv-10 pl-10" ng-repeat="question in cReportVm.info.questions | filter:searchQ" data-scrollto="#question{{$index}}">
+        <div class="pv-10 pl-30 mdl-color--teal">QUESTIONS</div>
+        <div class="quiz-report b-border pv-10 pl-30" ng-repeat="question in cReportVm.info.questions | filter:searchQ" data-scrollto="#question{{$index}}">
           {{question.name}}
           <span class="text-red" ng-if="question.isSkip">
             (Skip)

@@ -110,7 +110,7 @@
       $container = $(".mdl-layout__content")
       $container.animate({
         scrollTop: $(selector).offset().top - $container.offset().top + $container.scrollTop()
-      }, 200);
+      }, 500);
     }
 
     // Function for Scroll to particular element, based on data-target
@@ -120,7 +120,7 @@
       if (scrollToElem == ".mdl-layout__content") {
         $(scrollToElem).animate({
           scrollTop: 0,
-        }, 200);
+        }, 500);
       } else {
         scrollTo(scrollToElem);
       }

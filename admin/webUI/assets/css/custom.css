@@ -555,7 +555,7 @@ body.home {
 }
 
 .sticky-sidebar {
-  width: calc(23% - 16px);
+  width: calc(25% - 16px);
 }
 
 .sticky-sidebar-content {
