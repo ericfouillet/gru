@@ -255,48 +255,39 @@
       }, function(error) {
         console.log(error);
       }).then(function() {
+        var correct = [];
+        var skipped = [];
+        var incorrect = [];
         var questions = cReportVm.info.questions;
         quesLen = questions.length
 
-        // 
-        var counter = 0;
-        for (var i = 0; i < quesLen; i++) {
-          var question = questions[i];
-          if (question.answers[0] == "") {
-            question.isSkip = true;
-            if (counter >= 0) {
-              skippedQuestion = cReportVm.info.questions.splice(i, 1);
-              cReportVm.info.questions.splice(counter, 0, skippedQuestion[0]);
-            }
-            continue
-          }
-          question.answerArray = [];
+        for (var i = 0; i < questions.length; i++) {
+          qn = questions[i]
 
-          var needToShift = false;
-          for (var j = 0; j < question.answers.length; j++) {
+          qn.answerArray = [];
+          for (var j = 0; j < qn.answers.length; j++) {
             var answerObj = {
-              _uid_: question.answers[j]
+              _uid_: qn.answers[j]
             }
-            answerObj.is_correct = (question.correct.indexOf(question.answers[j]) > -1)
-            question.answerArray.push(answerObj);
-
-            if (!answerObj.is_correct) {
-              needToShift = true;
-            }
+            answerObj.is_correct = (qn.correct.indexOf(qn.answers[j]) > -1)
+            qn.answerArray.push(answerObj);
           }
-          if ((question.answers.length < question.correct.length)) {
-            question.notAnswered = question.correct.length - question.answers.length;
+          if ((qn.answers.length < qn.correct.length)) {
+            qn.notAnswered = qn.correct.length - qn.answers.length;
           }
 
-          // Shift Wrong answer to the top of array
-          if (needToShift || (question.notAnswered && question.notAnswered > 0)) {
-            var shiftQuestion = [];
-            shiftQuestion = cReportVm.info.questions.splice(i, 1);
-            cReportVm.info.questions.unshift(shiftQuestion[0]);
-            counter += 1;
+          if (qn.score === (qn.correct.length * qn.positive)) {
+            correct.push(qn)
+          } else if (qn.score === 0 && qn.answers.length === 1) {
+            skipped.push(qn)
+            qn.isSkip = true
+          } else {
+            incorrect.push(qn)
           }
         }
-      })
+
+        cReportVm.info.questions = [].concat([], incorrect, skipped, correct)
+      });
 
     function initScoreCircle() {
       var circleWidth = 2 * Math.PI * 30;
